@@ -50,7 +50,7 @@ fn check_horizontal(board: &Vec<Vec<String>>) -> bool {
     // checks if one row have 3 of the same character
     for i in 0..3 {
         // check if all the same
-        if (board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
+        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != " ") {
             return true;
         }
     }
@@ -73,15 +73,13 @@ fn check_diagaonal(board: &Vec<Vec<String>>) -> bool {
     if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != String::from(" ")) {
         return true;
     }
-    if (board[0][2] == board[1][1] && board[1][1] == board[2][0]) {
+    if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != String::from(" ")) {
         return true;
     }
     return false;
 }
 
 fn game_over(board: &Vec<Vec<String>>) -> bool {
-
-
     // figure out if the game is over
     if check_diagaonal(board) || check_vertical(board) || check_horizontal(board) {
         return true;
@@ -91,16 +89,15 @@ fn game_over(board: &Vec<Vec<String>>) -> bool {
 
 
 fn main() {
-    
     // say hello to our players
     hello_players();
-
     // define the board and init with empty state
     let mut board: Vec<Vec<String>> = vec![vec![String::from(" "); 3]; 3];
     let mut m: Vec<i32> = vec![0, 0];
     // print the board
     print_board(board.clone());
-
+    // turn is x
+    let mut turn = "X";
     // loop for every possible round
     loop {
         println!("");
@@ -108,11 +105,15 @@ fn main() {
         println!("");
 
         m = get_move();
+        board[m[1] as usize - 1][m[0] as usize - 1] = turn.to_string();
 
         if game_over(&board) {
-            println!("Game over!");
+            print_board(board.clone());
+            println!("Game over! {} wins!", turn);
             break;
         }
+        turn = if turn == "O" {"X"} else {"O"};
+        println!("It's now {}'s turn", turn);
     }
 }
 
